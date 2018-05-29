@@ -3,8 +3,11 @@ import * as ReactDOM from 'react-dom';
 import {observable} from 'mobx';
 import {observer} from 'mobx-react';
 import DevTools from 'mobx-react-devtools';
+// import { GoogleApiWrapper } from 'google-maps-react'
 
-import StoreLine from './components/storeLine';
+// import Map from './container/map'
+
+import App from './app';
 
 class AppState {
     @observable timer = 0;
@@ -25,10 +28,7 @@ class TimerView extends React.Component<{appState: AppState}, {}> {
     render() {
         return (
             <div>
-                <StoreLine/>
-                <button onClick={this.onReset}>
-                    Seconds passed: {this.props.appState.timer}
-                </button>
+                <App/>
                 <DevTools />
             </div>
         );

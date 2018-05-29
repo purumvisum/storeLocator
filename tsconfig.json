@@ -4,6 +4,7 @@
     "lib": ["es5", "es6", "dom"],
     "removeComments": true,
     "experimentalDecorators": true,
+    "allowSyntheticDefaultImports": true,
     "jsx": "react",
     "outDir": "dist"
   },

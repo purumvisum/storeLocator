@@ -13,17 +13,27 @@ module.exports = {
     publicPath: '/static/'
   },
   resolve: {
-    extensions: ['.js', '.ts', '.tsx']
+    extensions: ['.js', '.ts', '.tsx', '.css']
   },
   module: {
-    loaders: [{
-      test: /\.tsx?$/,
-      use: [
+    loaders: [
         {
-          loader: "awesome-typescript-loader"
+          test: /\.tsx?$/,
+          use: [
+            {
+              loader: "awesome-typescript-loader"
+            },
+          ],
+          include: path.join(__dirname, 'src')
         },
-      ],
-      include: path.join(__dirname, 'src')
-    }]
+        {
+            test: /\.css$/,
+            use: [{
+                loader: 'style-loader'
+            }, {
+                loader: 'css-loader'
+            }]
+        }
+    ]
   }
 };
