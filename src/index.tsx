@@ -1,43 +1,30 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import {observable} from 'mobx';
+import {Provider} from 'mobx-react';
 import {observer} from 'mobx-react';
 import DevTools from 'mobx-react-devtools';
-// import { GoogleApiWrapper } from 'google-maps-react'
 
-// import Map from './container/map'
+import Store from './store';
 
 import App from './app';
 
-class AppState {
-    @observable timer = 0;
 
-    constructor() {
-        setInterval(() => {
-            this.timer += 1;
-        }, 1000);
-    }
+const store: object = new Store();
+window['store'] = store;
 
-    resetTimer() {
-        this.timer = 0;
-    }
-}
 
 @observer
-class TimerView extends React.Component<{appState: AppState}, {}> {
+class StoreLocator extends React.Component<{Store: {}}> {
     render() {
         return (
-            <div>
-                <App/>
-                <DevTools />
-            </div>
+            <Provider storeLocatorStore={store}>
+                <div>
+                    <App />
+                    <DevTools />
+                </div>
+            </Provider>
         );
-     }
-
-     onReset = () => {
-         this.props.appState.resetTimer();
      }
 };
 
-const appState = new AppState();
-ReactDOM.render(<TimerView appState={appState} />, document.getElementById('root'));
+ReactDOM.render(<StoreLocator Store={store} />, document.getElementById('root'));
