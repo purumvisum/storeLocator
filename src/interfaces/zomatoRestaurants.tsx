@@ -29,8 +29,20 @@ export interface restaurantInterface {
         thumb: string,
         featured_image: string,
         cuisines: string,
+        location: restaurantLocationInterface
     }
 }
+
+
+export interface restaurantLocationInterface {
+    address: string,
+    city: string,
+    city_id: number,
+    country_id: number,
+    latitude: string,
+    longitude: string
+}
+
 
 
 
