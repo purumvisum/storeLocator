@@ -1,11 +1,5 @@
 import {observable, computed, action, flow} from 'mobx';
 
-// import zomato from 'zomato'
-
-const API_KEY = 'AIzaSyDLdLg8WNV8fknyJ23IjobtYQEmkUstqXU';
-const TYPE = 'restaurant';
-const RADIUS = '500';
-
 interface locationInterface {
     geometry: geometryInterface;
 }
@@ -19,86 +13,89 @@ interface locationInnerInterface {
     lng() : () => number
 }
 
+interface zomatoLocationInfo {
+    id: number,
+    name: string
+}
+
+// Zomato Restaurants
+interface restaurantsForLocation {
+    collections: restaurantCollection[]
+}
+
+interface restaurantCollection {
+    collection: {
+        collection_id: number,
+        description: string,
+        image_url: string,
+        title: string,
+        url: string,
+    }
+}
+
 export default class Store  {
     @observable location = {};
+    @observable zomatoLocation: zomatoLocationInfo;
+    @observable restaurants: restaurantsForLocation;
 
     @action
     changeLocation = (location: locationInterface): void => {
         this.location = location;
-        const lat = location.geometry.location.lat()
-        const lng = location.geometry.location.lng()
-
-        this.getRestaurants(lat, lng)
+        const lat = location.geometry.location.lat();
+        const lng = location.geometry.location.lng();
+        this.getZomatoLocation(lat, lng);
     };
 
-    @observable getRestaurants = (lat, lng) => {
+    @action
+    zomatoLocationInfo = (zomatoLocation: zomatoLocationInfo): void => {
+        this.zomatoLocation = zomatoLocation;
+    };
 
-        // var client = zomato.createClient({
-        //     userKey: '6a7926b6be91198f8a6d90d6c5fcea82', //as obtained from [Zomato API](https://developers.zomato.com/apis)
-        // });
-        //
-        // client.getCategories(null, function(err, result){
-        //     if(!err){
-        //         console.log(result);
-        //     }else {
-        //         console.log(err);
-        //     }
-        // });
+    @action
+    getZomatoLocationSuccess = (): void => {
+        this.getRestaurants(this.zomatoLocation.id);
+    };
 
-        // var pyrmont = new google.maps.LatLng(-33.8665433,151.1956316);
-        //
-        // var request = {
-        //     location: pyrmont,
-        //     radius: '500',
-        //     types: ['store']
-        // };
-        //
-        // service = new google.maps.places.PlacesService(map);
-        // service.nearbySearch(request, callback);
+    @action
+    getReataurantsSuccess = (restaurants: restaurantsForLocation): void => {
+        this.setRestaurants(restaurants);
+    };
 
+    @action
+    setRestaurants = (restaurants: restaurantsForLocation): void => {
+        this.restaurants = restaurants
+    };
 
+    getRestaurants = (cityId: number) => {
         fetch(
-            `https://developers.zomato.com/api/v2.1/geocode?lat=${lat}&lon=${lng}`,
+            `https://developers.zomato.com/api/v2.1/collections?city_id=${cityId}&count=500`,
             {
                 headers: {
                     'Accept': 'application/json',
                     'X-Zomato-API-Key': '6a7926b6be91198f8a6d90d6c5fcea82'
                 }
-
-
             }
         ).then(response => {
             return response.json()
         }).then(data => {
-            console.warn('data',data)
-            return data
+            this.getReataurantsSuccess(data)
         })
-
-        // fetch(
-        //     `https://` +
-        //     `maps.googleapis.com/maps/api/place/` +
-        //     `nearbysearch/json?` +
-        //     `location=${lat},${lng}&`+
-        //     `radius=${RADIUS}&` +
-        //     `type=${TYPE}&` +
-        //     `key=${API_KEY}`,
-        //     {
-        //         mode: 'no-cors',
-        //         headers: {
-        //             'Accept': 'application/json',
-        //             'Content-Type': 'application/json'
-        //         }
-        //     }
-        // ).then(response => {
-        //     return response
-        // }).then(data => {
-        //     console.warn(data)
-        //     return data
-        // })
     };
 
-
+   getZomatoLocation = (lat, lng) => {
+        fetch(
+            `https://developers.zomato.com/api/v2.1/cities?lat=${lat}&lon=${lng}`,
+            {
+                headers: {
+                    'Accept': 'application/json',
+                    'X-Zomato-API-Key': '6a7926b6be91198f8a6d90d6c5fcea82'
+                }
+            }
+        ).then(response => {
+            return response.json()
+        }).then(data => {
+            this.zomatoLocationInfo(data.location_suggestions[0]);
+            this.getZomatoLocationSuccess();
+        })
+    };
 }
-
-
-// https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=-33.8670522,151.1957362&radius=500&type=restaurant&keyword=cruise&key=YOUR_API_KEY
