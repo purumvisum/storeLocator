@@ -16,7 +16,7 @@ export default class StoreList extends React.Component<StoreListProps, {} > {
     render() {
         console.warn(this.props.storeLocatorStore)
         return (
-            <div>
+            <div className = {'storeList'}>
                 { this.props.storeLocatorStore.restaurants  &&
                     <List>
                         {this.props.storeLocatorStore.restaurants.map(

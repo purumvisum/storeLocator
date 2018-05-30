@@ -11,22 +11,13 @@ interface StoreListProps {
 
 @inject('storeLocatorStore')
 @observer
-export default  class Map extends React.Component<StoreListProps, {} >  {
-
-    // centerLat= this.props.storeLocatorStore.location ? this.props.storeLocatorStore.location.geometry.location.lat() : -34.397;
-    // centerLng= this.props.storeLocatorStore.location ? this.props.storeLocatorStore.location.geometry.location.lng() : 150.644;
-
-
+export default class Map extends React.Component<StoreListProps, {} >  {
     render() {
-        console.warn('123123')
         const MyGoogleMap = withGoogleMap((props: {restaurants: restaurantInterface[] }) =>
             <GoogleMap
                 defaultCenter={{ lat: -34.397, lng: 150.644 }}
                 defaultZoom={0}
-
-
                 options={{disableDefaultUI: true}}>
-
 
                 {props.restaurants && props.restaurants.map(item => (
                     <Marker
