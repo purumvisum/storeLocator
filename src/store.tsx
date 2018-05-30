@@ -1,4 +1,5 @@
 import {observable, computed, action, flow} from 'mobx';
+import {restaurantsForLocation} from './interfaces/zomatoRestaurants';
 
 interface locationInterface {
     geometry: geometryInterface;
@@ -16,21 +17,6 @@ interface locationInnerInterface {
 interface zomatoLocationInfo {
     id: number,
     name: string
-}
-
-// Zomato Restaurants
-interface restaurantsForLocation {
-    collections: restaurantCollection[]
-}
-
-interface restaurantCollection {
-    collection: {
-        collection_id: number,
-        description: string,
-        image_url: string,
-        title: string,
-        url: string,
-    }
 }
 
 export default class Store  {
