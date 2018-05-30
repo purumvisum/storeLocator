@@ -4,7 +4,7 @@ import List from '@material-ui/core/List';
 import StoreLine from './storeLine';
 
 import store from '../store';
-import {restaurantsForLocation} from '../interfaces/zomatoRestaurants';
+import {restaurantInterface} from '../interfaces/zomatoRestaurants';
 
 interface StoreListProps {
     storeLocatorStore?: store;
@@ -14,16 +14,16 @@ interface StoreListProps {
 @observer
 export default class StoreList extends React.Component<StoreListProps, {} > {
     render() {
-        // console.warn(this.props.storeLocatorStore.restaurants.collections)
+        console.warn(this.props.storeLocatorStore)
         return (
             <div>
-                { this.props.storeLocatorStore.restaurants && this.props.storeLocatorStore.restaurants.collections &&
+                { this.props.storeLocatorStore.restaurants  &&
                     <List>
-                        {this.props.storeLocatorStore.restaurants.collections.map(
-                            (item) => {
+                        {this.props.storeLocatorStore.restaurants.map(
+                            (item: restaurantInterface) => {
                                 return <StoreLine
-                                    key = {item.collection.collection_id}
-                                    collection={item.collection}/>
+                                    key = {item.restaurant.id}
+                                    restaurant={item.restaurant}/>
                             }
                         )
                         }
@@ -36,27 +36,3 @@ export default class StoreList extends React.Component<StoreListProps, {} > {
         );
     }
 };
-
-
-// Object
-// collection_id
-//     :
-//     (...)
-// description
-//     :
-//     (...)
-// image_url
-//     :
-//     (...)
-// res_count
-//     :
-//     (...)
-// share_url
-//     :
-//     (...)
-// title
-//     :
-//     (...)
-// url
-//     :
-//     (...)

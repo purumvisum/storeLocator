@@ -3,19 +3,19 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import Avatar from '@material-ui/core/Avatar';
 
-import {restaurantCollection} from '../interfaces/zomatoRestaurants';
+import {restaurantInterface} from '../interfaces/zomatoRestaurants';
 
 
-export default class StoreLine extends React.Component<restaurantCollection, {} > {
+export default class StoreLine extends React.Component<restaurantInterface, {} > {
     render() {
         return (
             <ListItem
                 style= {{'cursor': 'pointer'}}
                 onClick = {() => console.warn('qwe')}>
-                <Avatar alt={this.props.collection.description} src={this.props.collection.image_url} />
+                <Avatar alt={this.props.restaurant.name} src={this.props.restaurant.thumb} />
                 <ListItemText
-                    primary={`${this.props.collection.title} + ${this.props.collection.collection_id}`}
-                    secondary={this.props.collection.description} />
+                    primary={`${this.props.restaurant.name} + ${this.props.restaurant.id}`}
+                    secondary={`Cuisines: ${this.props.restaurant.cuisines}`} />
             </ListItem>
 
         );

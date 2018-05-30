@@ -1,5 +1,5 @@
 import {observable, computed, action, flow} from 'mobx';
-import {restaurantsForLocation} from './interfaces/zomatoRestaurants';
+import {restaurantInterface} from './interfaces/zomatoRestaurants';
 
 interface locationInterface {
     geometry: geometryInterface;
@@ -22,7 +22,7 @@ interface zomatoLocationInfo {
 export default class Store  {
     @observable location = {};
     @observable zomatoLocation: zomatoLocationInfo;
-    @observable restaurants: restaurantsForLocation;
+    @observable restaurants: restaurantInterface[];
 
     @action
     changeLocation = (location: locationInterface): void => {
@@ -43,18 +43,36 @@ export default class Store  {
     };
 
     @action
-    getReataurantsSuccess = (restaurants: restaurantsForLocation): void => {
+    getReataurantsSuccess = (restaurants: restaurantInterface[]): void => {
         this.setRestaurants(restaurants);
     };
 
     @action
-    setRestaurants = (restaurants: restaurantsForLocation): void => {
-        this.restaurants = restaurants
+    setRestaurants = (restaurants: restaurantInterface[]): void => {
+        this.restaurants = [...restaurants]
     };
 
     getRestaurants = (cityId: number) => {
+        // fetch(
+        //     `https://developers.zomato.com/api/v2.1/collections?city_id=${cityId}&count=500`,
+        //     {
+        //         headers: {
+        //             'Accept': 'application/json',
+        //             'X-Zomato-API-Key': '6a7926b6be91198f8a6d90d6c5fcea82'
+        //         }
+        //     }
+        // ).then(response => {
+        //     return response.json()
+        // }).then(data => {
+        //     this.getReataurantsSuccess(data)
+        // })
+        //
+
+        // https://stackoverflow.com/questions/45545705/how-to-get-more-than-100-restaurants-via-zomato-api
+        // https://developers.zomato.com/api/v2.1/search?entity_id=259&entity_type=city&start=0&count=20
         fetch(
-            `https://developers.zomato.com/api/v2.1/collections?city_id=${cityId}&count=500`,
+
+            `https://developers.zomato.com/api/v2.1/search?entity_id=${cityId}&entity_type=city&start=0&count=20`,
             {
                 headers: {
                     'Accept': 'application/json',
@@ -64,7 +82,8 @@ export default class Store  {
         ).then(response => {
             return response.json()
         }).then(data => {
-            this.getReataurantsSuccess(data)
+            console.warn('data', data)
+            this.getReataurantsSuccess(data.restaurants)
         })
     };
 
